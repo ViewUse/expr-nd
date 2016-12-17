@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<title>ab</title>
+		<script src="http://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+		<script src="javascripts/md5.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="ab-server-data">
+		</div>
+		<script type="text/javascript">
+			var webHostInterface = 'https://120.24.101.19:10001/seller';
+			var httpTokenUrl = webHostInterface + '/token/getToken?time=' + new Date().getTime();
+			//httpTokenUrl += '&sellerUserName=zhang&sellerPassword=96e79218965eb72c92a549dd5a330112';
+			var httpDataUrl = webHostInterface + '/loaddata/updateData?time=' + new Date().getTime();
+			var tokenJson = {
+				sellerId : 'S160830170638302493',
+				sign : '',
+				timeStamp : '',
+				token : ''
+			};
+			//var sign = hex_md5(tokenJson.sellerId + tokenJson.token + tokenJson.timeStamp + '123456');
+			function ajaxToken(callback) {
+				$.ajax({
+					url : httpTokenUrl,
+					type : 'POST',
+					data : {
+						sellerUserName : 'chen',
+						sellerPassword : '96e79218965eb72c92a549dd5a330112'
+					}
+				}).done(function(result) {
+					var retData = JSON.parse(result);
+					tokenJson.token = retData.token;
+					tokenJson.timeStamp = retData.time;
+					tokenJson.sign = hex_md5(tokenJson.sellerId + tokenJson.token + tokenJson.timeStamp + '123456');
+					callback && callback(true, retData);
+				}).fail(function(err) {
+					console.log('err');
+					callback && callback(false);
+				});
+			}
+			
+			function ajaxUpdateData(callback) {
+				$.ajax({
+					url : httpDataUrl,
+					type : 'POST',
+					data : {
+						timeStamp : tokenJson.timeStamp,
+						sign : tokenJson.sign,
+						sellerId : tokenJson.sellerId,
+						activationCode : ''
+					}
+				}).done(function(result) {
+					var retData = JSON.parse(result);
+					callback && callback(true, retData);
+				}).fail(function(err) {
+					callback && callback (false);
+				});
+			}
+
+			function dealUpdateData(data) {
+				if(!data) return;
+				var retSeller = data.seller;
+				var retCommodityType = data.commodityTypes;
+				var retEmployees = data.employees;
+				$('#ab-server-data').empty();
+				$('#ab-server-data').append('<ul>');
+				for(var reti=0,retlen=retSeller.length; reti<retlen; reti++) {
+					$('#ab-server-data').append('<li>' + '&nbsp;<span style="color:red;">' + retSeller[reti].id + '</span>&nbsp;' + retSeller[reti].ename + '&nbsp;' + retSeller[reti].location + '</li>');
+				}
+				for(var reti=0,retlen=retEmployees.length; reti<retlen; reti++) {
+					$('#ab-server-data').append('<li>' + '&nbsp;<span style="color:red;">' + retEmployees[reti].id + '</span>&nbsp;' + retEmployees[reti].workName + '&nbsp;' + retEmployees[reti].workId + '&nbsp;' + retEmployees[reti].workType + '</li>');
+				}
+				for(var reti=0,retlen=retCommodityType.length;reti<retlen; retlen++) {
+					$('#ab-server-data').append('<li>' + '&nbsp;<span style="color:red;">' + retCommodityType[reti].id + '</span>&nbsp;' + retCommodityType[reti].name + '&nbsp;' + retCommodityType[reti].sellerId + '&nbsp;' + retCommodityType[reti].kitchenPrintJson + '</li>');
+				}
+				$('#ab-server-data').append('</ul>');
+			}
+
+			ajaxToken(function(success, data) {
+				if(success) {
+					ajaxUpdateDate(function(success, data) {
+						if(success) {
+							dealUpdateData(data);
+							return;
+						}
+						console.log('data load failed!~');
+					})
+					return;
+				}
+
+				console.log('token auth failed!~');
+			});
+		</script>
+	</body>
+</html>

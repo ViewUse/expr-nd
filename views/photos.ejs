@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf8">
+		<title><%= settings.title %></title>
+		<link rel="stylesheet" href="stylesheets/style.css" >
+	</head>
+	<body>
+		<!-- <div style="border:1px solid #ccc;box-shadow:1px 1px 1px gray;width:100px;height:100px;">
+			<h3><%= nodeLogoTitle %></h3>
+			<img src="<%= nodeLogo %>" />
+		</div>
+		<div style="border:1px solid #ccc;box-shadow:1px 1px 1px gray;width:100px;height:100px;display:inline;">
+			<h3><%= nodeManTitle %></h3>
+			<img src="<%= nodeman %>" width="100px" height="100px"/>
+		</div> -->
+
+		<!-- 操作数组 -->
+		<div id="photos">
+			<% photos.forEach(function(photo) { %>
+				<div class="photo" style="width:200px;height:200px;">
+					<h2><%= photo.name %></h2>
+					<img src='<%=photo.path%>' width="150px" height="150px"/>
+				</div>
+			<% }) %>
+		</div>
+	</body>
+</html>

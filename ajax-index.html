@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script> -->
+		<script src="http://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var webHostInterface = 'https://120.24.101.19:10001/seller';
+			var httpTokenUrl = webHostInterface + '/token/getToken?time=' + new Date().getTime();
+			httpTokenUrl += '&sellerUserName=zhang&sellerPassword=96e79218965eb72c92a549dd5a330112';
+			$.ajax({
+				url : httpTokenUrl,
+			}, function(result) {
+				console.log(result);
+			});
+		</script>
+	</body>
+</html>
