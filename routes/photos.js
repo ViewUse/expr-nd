@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
+	
+});
+router.get('/:222', function(req, res, next) {
 	//res.send('response photos path');
 	res.render('photos', {
 		nodeLogoTitle : 'Node.js Logo',

@@ -7,14 +7,18 @@
   },
   "dependencies": {
     "body-parser": "~1.15.2",
+    "connect-multiparty": "^2.0.0",
+    "console-trace": "^0.2.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "ejs": "~2.5.2",
     "express": "~4.14.0",
     "https": "^1.0.0",
     "jquery": "^3.1.1",
+    "mongoose": "^4.7.3",
     "morgan": "~1.7.0",
     "request": "^2.79.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "tracer": "^0.8.7"
   }
 }

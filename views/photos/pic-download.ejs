@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf8">
+		<title><%= title %></title>
+		<link rel="stylesheet" href="stylesheets/pic-list.css" />
+	</head>
+	<body>
+		<div id="photos">
+			<% photos.forEach(function(photo) { %>
+				<div class="photo" style="width:100px;height:100px;">
+					<h2><%= photo.name %></h2>
+					<a href="/picdn/<%=photo.id%>/download" style="width:50px;height:30px;line-height:30px;text-align:center;border:1px solid #ccc;">下载
+						<img src='/photos/<%=photo.name%>.png' />
+					</a>
+				</div>
+			<% }) %>
+		</div>
+	</body>
+</html>

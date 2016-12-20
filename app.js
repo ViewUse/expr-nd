@@ -4,13 +4,24 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var multipart = require('connect-multiparty');
+// 给 multipart 设置 options
+//var multipartMiddle = multipart({uploadDir : __dirname + '/public/photos'});
+var multipartMiddle = multipart();
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 var photos = require('./routes/photos.js');
 var aibaoCash = require('./routes/abcash.js');
+var photoRouter = require('./routes/photos/photos.js');
 
 var app = express();
+
+global.common = {
+	logger : require('tracer').colorConsole({
+		format: '<{{title}}> {{file}}:{{line}} ({{method}}) {{message}}'
+	})
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,13 +36,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.disable('view cache');
 
+
+// upload dir
+app.set('photos', __dirname + '/public/photos');
 // common data
 app.set('title', 'Application');
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/photos', photos);
+app.use('/pics', photoRouter.list);
+app.use('/picsdn', photoRouter.download);
+app.use('/picdn/:id/download', photoRouter.picDownload(app.get('photos')));
 app.use('/abcash', aibaoCash);
+app.get('/upload', photoRouter.form);
+app.post('/upload', multipartMiddle, photoRouter.submit(app.get('photos')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
