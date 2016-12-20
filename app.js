@@ -18,6 +18,7 @@ var photoRouter = require('./routes/photos/photos.js');
 var app = express();
 
 global.common = {
+  system : require('os'),
 	logger : require('tracer').colorConsole({
 		format: '<{{title}}> {{file}}:{{line}} ({{method}}) {{message}}'
 	})

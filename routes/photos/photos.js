@@ -18,17 +18,38 @@ exports.submit = function(dir) {
 		var name = req.body.photo.name || img.name;
 		var path = join(dir, img.name);
 
-		fs.rename(img.path, path, function(err) {
-			if(err) return next(err);
-
-			Photo.create({
-				name : name,
-				path : img.path //img.name
-			}, function(err) {
-				if (err) return next(err);
-				res.redirect('/');
+		if(process.platform.indexOf('win32') > -1) {
+			// win32 resolve
+			var is = fs.createReadStream(img.path);
+			var os = fs.createWriteStream(path);
+			is.pipe(os);
+			is.on('end', function() {
+				fs.unlinkSync(img.path);
+				Photo.create({
+					name : name,
+					path : path
+				}, function(err) {
+					if(err) return next(err);
+					res.redirect('/');
+				});
 			});
-		});
+			// nodejs 0.6 version resolve
+			/*require('util').pump(is, os, function() {
+				fs.unlinkSync(img.path);
+			});*/
+		} else {
+			fs.rename(img.path, path, function(err) {
+				if(err) return next(err);
+
+				Photo.create({
+					name : name,
+					path : img.path //img.name
+				}, function(err) {
+					if (err) return next(err);
+					res.redirect('/');
+				});
+			});
+		}
 	};
 };
 
